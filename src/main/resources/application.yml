@@ -1,0 +1,40 @@
+server:
+  error:
+    include-binding-errors: always
+    include-message: always
+  port: ${SERVER_PORT:4001}
+
+spring:
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:local}
+---
+
+spring:
+  config:
+    activate:
+      on-profile: local
+  datasource:
+    url: jdbc:sqlserver://localhost:1433;databaseName=tempdb;encrypt=true;trustServerCertificate=true
+    username: sa
+    password: PaSsWoRd@123
+  jpa:
+    database-platform: org.hibernate.dialect.SQLServerDialect
+    properties:
+      hibernate.format_sql: true
+    show-sql: true
+
+---
+spring:
+  config:
+    activate:
+      on-profile: docker
+  datasource:
+    driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+    url: jdbc:sqlserver://demo_db;database=tempdb;encrypt=true;trustServerCertificate=true
+    username: sa
+    password: PaSsWoRd@123
+  jpa:
+    database-platform: org.hibernate.dialect.SQLServerDialect
+    properties:
+      hibernate.format_sql: true
+    show-sql: true

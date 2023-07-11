@@ -1,0 +1,49 @@
+services:
+  redis-cache:
+    container_name: redis-cache
+    image: redis
+    restart: always
+    ports:
+      - "16378:6379"
+    command: redis-server --requirepass Pass_Word
+    volumes:
+      - redis-cache-volume:/data
+  mssql:
+    container_name: demo_db
+    image: mcr.microsoft.com/mssql/server:2017-latest
+    restart: always
+    ports:
+      - "1433:1433"
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=PaSsWoRd@123
+    volumes:
+      - mssql-volume:/data
+    networks:
+      - app-network
+  demo-deploy:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    image: demo-deploy
+    container_name: demo-deploy
+    depends_on:
+      - mssql
+      - redis-cache
+    hostname: demo-deploy
+    ports:
+      - "4001:4001"
+    volumes:
+      - app-volume:/usr/app/demo-deploy
+    networks:
+      - app-network
+    environment:
+      - SERVER_PORT=4001
+      - SPRING_PROFILES_ACTIVE=docker
+volumes:
+  redis-cache-volume:
+  mssql-volume:
+  app-volume:
+networks:
+  app-network:
+    driver: bridge
