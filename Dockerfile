@@ -4,7 +4,7 @@ RUN mvn clean package -Pprod -DskipTests
 
 FROM openjdk:19-jdk
 
-COPY target/demo-deloy-0.0.1-SNAPSHOT.jar demo-deploy.jar
+COPY /target/demo-deloy-0.0.1-SNAPSHOT.jar demo-deploy.jar
 
 #Using Dokerize to check whether db is up, if it is then start this service.
 COPY dockerize dockerize
