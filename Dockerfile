@@ -1,10 +1,10 @@
 FROM maven:3.8.2-jdk-11 AS build
 COPY . .
-CMD ./mvnw clean package -DskipTests
+ENTRYPOINT ["/mvnw", "clean", "package", "-DskipTests"]
 
 FROM openjdk:19-jdk
 
-COPY --from=build /target/demo-deloy-0.0.1-SNAPSHOT.jar demo-deploy.jar
+COPY --from=build target/demo-deloy-0.0.1-SNAPSHOT.jar demo-deploy.jar
 #Using Dokerize to check whether db is up, if it is then start this service.
 COPY dockerize dockerize
 
